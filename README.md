@@ -24,3 +24,4 @@ Sistema profesional de gestión de inventario y control de ventas desarrollado p
 * **Tailwind CSS:** Diseño moderno, responsivo y optimizado para escritorio.
 * **Recharts:** Implementación de gráficos estadísticos dinámicos.
 * **Vercel:** Despliegue del cliente frontend con integración de GitHub.
+<img width="1670" height="522" alt="image" src="https://github.com/user-attachments/assets/b740f790-982b-4d3c-bc52-b8530a446cd1" />
