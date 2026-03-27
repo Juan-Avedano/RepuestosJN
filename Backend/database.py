@@ -1,10 +1,18 @@
+import os
+
 from sqlalchemy import  create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # formato: postgresql://usuario:password@localhost:5332/nombre_db
-SQLALCHEMY_DATABASE_URL= "postgresql://postgres:juancho16@localhost:5432/repuestos_db"
+#SQLALCHEMY_DATABASE_URL= "postgresql://db_repuestos_jn_user:X1FeN05J2Fw3YwIPdvExS2fzGVm79lVS@dpg-d7313evgi27c73crofmg-a.ohio-postgres.render.com/db_repuestos_jn"
+SQLALCHEMY_DATABASE_URL=os.getenv("DATABASE_URL")
+if not SQLALCHEMY_DATABASE_URL:
+    SQLALCHEMY_DATABASE_URL ="postgresql://postgres:juancho16@localhost/repuestos_db"
 
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit = False, autoflush=False, bind=engine)
 
