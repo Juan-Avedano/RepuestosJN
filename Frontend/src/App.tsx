@@ -49,12 +49,14 @@ function App() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const API_URL = "https://api-repuestos-jn.onrender.com";
+
   const manejarLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); // Limpiamos errores anteriores
 
     try {
-      const response = await fetch("http://localhost:8000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre: usuario, password: password }),
@@ -89,8 +91,8 @@ function App() {
     try {
       // Si hay una fecha elegida, la agregamos a la URL como "query parameter"
       const url = filtroFecha
-        ? `http://localhost:8000/historial?fecha=${filtroFecha}`
-        : "http://localhost:8000/historial";
+        ? `${API_URL}/historial?fecha=${filtroFecha}`
+        : `${API_URL}/historial`;
 
       const res = await fetch(url);
       const data = await res.json();
@@ -105,42 +107,42 @@ function App() {
   useEffect(() => {
     if (pantallaActual === "estadisticas") {
       // 1. Ventas Semanales
-      fetch("http://localhost:8000/stats/ventas-semanales")
+      fetch(`${API_URL}/stats/ventas-semanales`)
         .then((r) => r.json())
         .then(setDataVentas);
 
       // 2. Marcas
-      fetch("http://localhost:8000/stats/marcas")
+      fetch(`${API_URL}/stats/marcas`)
         .then((r) => r.json())
         .then(setDataMarcas);
 
       // 3. Stock Alto
-      fetch("http://localhost:8000/stats/stock-alto")
+      fetch(`${API_URL}/stats/stock-alto`)
         .then((r) => r.json())
         .then(setDataStock);
 
       // 4. Ticket Promedio
-      fetch("http://localhost:8000/stats/ticket-promedio")
+      fetch(`${API_URL}/stats/ticket-promedio`)
         .then((r) => r.json())
         .then((data) => setTicketPromedio(data.valor));
 
       // 5. Proveedores
-      fetch("http://localhost:8000/stats/proveedores-top")
+      fetch(`${API_URL}/stats/proveedores-top`)
         .then((r) => r.json())
         .then(setDataProveedores);
 
       // 6. Horas Pico
-      fetch("http://localhost:8000/stats/horas-pico")
+      fetch(`${API_URL}/stats/horas-pico`)
         .then((r) => r.json())
         .then(setDataHoras);
 
       // 7. Top Vendidos
-      fetch("http://localhost:8000/stats/top-vendidos")
+      fetch(`${API_URL}/stats/top-vendidos`)
         .then((r) => r.json())
         .then(setDataTop);
 
       // 8. Comparativa Mensual
-      fetch("http://localhost:8000/stats/comparativa-mensual")
+      fetch(`${API_URL}/stats/comparativa-mensual`)
         .then((r) => r.json())
         .then(setDataComparativa);
     }
@@ -176,7 +178,7 @@ function App() {
 
   // --- 2. CARGA DE DATOS ---
   useEffect(() => {
-    fetch("http://localhost:8000/repuestos")
+    fetch(`${API_URL}/repuestos`)
       .then((res) => res.json())
       .then((data) => setRepuestos(data));
   }, []);
@@ -230,9 +232,7 @@ function App() {
     e.preventDefault();
 
     // Decidimos la URL y el método según si estamos editando o no
-    const url = editandoId
-      ? `http://localhost:8000/repuestos/${editandoId}`
-      : "http://localhost:8000/repuestos";
+    const url = editandoId ? `/repuestos/${editandoId}` : `/repuestos`;
     const metodo = editandoId ? "PUT" : "POST";
     try {
       const response = await fetch(url, {
@@ -258,7 +258,7 @@ function App() {
         });
 
         // Recargamos los datos para ver el nuevo producto
-        const res = await fetch("http://localhost:8000/repuestos");
+        const res = await fetch(`${API_URL}/repuestos`);
         const data = await res.json();
         setRepuestos(data);
       } else {
@@ -283,7 +283,7 @@ function App() {
     if (carrito.length === 0) return;
 
     try {
-      const response = await fetch("http://localhost:8000/ventas", {
+      const response = await fetch(`${API_URL}/ventas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(carrito),
@@ -294,7 +294,7 @@ function App() {
         setCarrito([]);
         setPantallaActual("inventario");
         // Recargamos los repuestos para ver el stock actualizado
-        const res = await fetch("http://localhost:8000/repuestos");
+        const res = await fetch(`${API_URL}/repuestos`);
         const data = await res.json();
         setRepuestos(data);
       } else {
