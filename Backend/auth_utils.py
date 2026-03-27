@@ -2,8 +2,9 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from jose import jwt
 
-#REPUESTOS_JN_2026_CORDILLERA_CORDOBA_CAPITAL
-SECRET_KEY="REPUESTOS_JN_LACOORDILLERA"
+from Backend.claveSecreta import SECRET_KEY
+
+
 ALGORITHM = "HS256"
 ACCES_TOKEN_EXPIRE_MINUTES=60
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated = "auto")
