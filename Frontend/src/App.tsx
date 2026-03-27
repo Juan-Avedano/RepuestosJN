@@ -858,7 +858,7 @@ function SeccionInventario({
             onChange={manejarCambio}
             className="w-full p-2 border rounded mt-1 bg-slate-50"
             required
-            placeholder="Rubén Martinez"
+            placeholder="Kit Correa/Lámpara"
           />
         </div>
         <div>
