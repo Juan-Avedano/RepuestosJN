@@ -232,7 +232,9 @@ function App() {
     e.preventDefault();
 
     // Decidimos la URL y el método según si estamos editando o no
-    const url = editandoId ? `/repuestos/${editandoId}` : `/repuestos`;
+    const url = editandoId
+      ? `${API_URL}/repuestos/${editandoId}`
+      : `${API_URL}/repuestos`;
     const metodo = editandoId ? "PUT" : "POST";
     try {
       const response = await fetch(url, {
