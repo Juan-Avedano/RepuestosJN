@@ -1,15 +1,12 @@
 from datetime import date, timedelta
-
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, text
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,joinedload
 from typing import List
-from sqlalchemy.orm import joinedload
 import models , schemas
 from database import engine, get_db
 from auth_utils import verify_password, create_access_token 
-from sqlalchemy.orm import joinedload
 
 
 
@@ -21,7 +18,7 @@ app = FastAPI(title="Sistema de Stock - Repuestos JN")
 # CONFIGURACION DE CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins= ["*"], # la url del frontend de vite
+    allow_origins= ["*"], 
     allow_credentials = True,
     allow_methods = ["*"],# Permite get, post, put, delete, etc.
     allow_headers = ["*"],
@@ -44,6 +41,8 @@ def crear_repuesto(repuesto:schemas.RepuestoCreate, db:Session=Depends(get_db)):
         db.rollback() # si hay error, volvemos atras
         raise HTTPException(status_code=400, detail="El código de barra ya existe o hubo un error")
 
+
+
 @app.get("/repuestos", response_model=List[schemas.Repuesto])
 def leer_repuestos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     # esta linea busca todos los repuestos que esten activos
@@ -61,7 +60,6 @@ def obtener_historial(fecha: date = None, db: Session = Depends(get_db)):
     
     ventas = query.order_by(models.Venta.fecha.desc()).all()
     
-    # PEQUEÑO TRUCO: Para debuguear, imprimí el primer resultado en la consola de Python
     if ventas:
         print(f"Venta #1 tiene {len(ventas[0].detalles)} productos")
         
@@ -72,7 +70,7 @@ def descontar_Stock(id_producto: int, cantidad: int, db: Session= Depends(get_db
     # Buscamos el producto en la BD
     producto = db.query(models.Repuesto).filter(models.Repuesto.id == id_producto). first()
 
-    # validacion senior (q pasa si el stock es insuficiente)
+    # Que pasa si el stock es insuficiente
     if producto.stock< cantidad:
         raise HTTPException(status_code=400, detail="Stock Insuficiente, recargar ya mismo el stock del producto")
     
@@ -87,7 +85,7 @@ def descontar_Stock(id_producto: int, cantidad: int, db: Session= Depends(get_db
 
 @app.post("/ventas")
 def realizar_venta(carrito: List[schemas.ItemVenta],db:Session= Depends(get_db)):
-    #1. Calculamos el total de la venta en el servidor
+    # Calculamos el total de la venta en el servidor
     total_venta=0
     objetos_detalle=[] # aqui guardamos los detalles antes de subir todo
     for item in carrito:
@@ -115,11 +113,11 @@ def realizar_venta(carrito: List[schemas.ItemVenta],db:Session= Depends(get_db))
         )
         objetos_detalle.append(nuevo_detalle)
         
-    #2. creamos la venta principal
+    # Creamos la venta principal
     nueva_venta = models.Venta(total = total_venta, detalles=objetos_detalle)
         
     db.add(nueva_venta)
-    db.commit()# ¡BOOM! Se guarda la venta, los detalles y se descuenta el stock, todo junto.
+    db.commit()
     return {"message": "Venta e Historial guardados"}
 
 

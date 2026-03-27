@@ -18,18 +18,20 @@ import {
 } from "recharts";
 
 function App() {
+  const COLORES = ["#facc15", "#1e293b", "#3b82f6", "#ef4444", "#22c55e"];
+
   // --- 1. ESTADOS ---
   const [repuestos, setRepuestos] = useState<Repuesto[]>([]);
   // puede ser un string para tener varias pantqallas :"inventario","carrito","ventas"
   const [pantallaActual, setPantallaActual] = useState("inventario");
   const [historial, setHistorial] = useState([]);
   const [carrito, setCarrito] = useState<ItemCarrito[]>([]);
+  const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
   const [busqueda, setBusqueda] = useState("");
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [filtroFecha, setFiltroFecha] = useState("");
   const [datosGrafico, setDatosGrafico] = useState([]);
 
-  const COLORES = ["#facc15", "#1e293b", "#3b82f6", "#ef4444", "#22c55e"]; // Amarillo J·N, Slate, Azul, Rojo, Verde
   const [dataVentas, setDataVentas] = useState([]);
   const [dataMarcas, setDataMarcas] = useState([]);
   const [dataStock, setDataStock] = useState([]);
@@ -77,7 +79,6 @@ function App() {
     setToken(null);
   };
 
-  const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
   const eliminarDelCarrito = (id: number) => {
     // usamos .filter para dejar afuera el id que queremos borrar
     setCarrito(carrito.filter((item) => item.id !== id));
@@ -227,8 +228,6 @@ function App() {
 
   const guardarRepuesto = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("Intentando guardar:", nuevoRepuesto);
 
     // Decidimos la URL y el método según si estamos editando o no
     const url = editandoId
@@ -794,7 +793,6 @@ function App() {
 
 export default App;
 
-// recibe los repuestos para listarlos y la funcion para agregar al carrito
 // Recibe los repuestos para listarlos y la función para agregar al carrito
 function SeccionInventario({
   repuestos,
