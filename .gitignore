@@ -1,6 +1,7 @@
 # --- BACKEND (Python) ---
 **/__pycache__/
 Backend/crear_admin.py
+Backend/claveSecreta.py
 Backend/venv/
 .env
 *.pyc
