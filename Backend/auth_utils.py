@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from jose import jwt
 
-from Backend.claveSecreta import SECRET_KEY
+from claveSecreta import SECRET_KEY
 
 
 ALGORITHM = "HS256"
